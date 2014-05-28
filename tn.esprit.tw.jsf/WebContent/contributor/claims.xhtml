@@ -1,0 +1,207 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:define name="pageTitle">Traitement des réclamations</ui:define>
+
+		<ui:define name="content">
+			<h2>
+				<p class="text-center">Traitement des réclamations</p>
+				</h2><br ></br> 
+
+			<h:form prependId="false" id="formDatatableClaim">
+				<p:growl id="messages1" showDetail="true" sticky="false" />
+				<p:poll interval="5" listener="#{contributerBean.loadClaims()}"
+					update="datatableClaim" />
+
+				<p:dataTable id="datatableClaim" var="claim"
+					value="#{contributerBean.claims}" widgetVar="tableClaim"
+					rowKey="#{claim.id}" paginator="true" rows="10"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+					paginatorAlwaysVisible="false"
+					selection="#{contributerBean.selected}" selectionMode="single">
+
+					<p:ajax event="rowSelect"
+						update=":formDatatableClaim:datatableClaim :formDatatableClaim:messages1 :formDatatableClaim:display"
+						oncomplete="claimDialog.show()" />
+
+
+					<f:facet name="header">Les réclamations en cours</f:facet>
+					<p:column headerText="Référence">
+						<h:outputText value="#{claim.reference}" />
+					</p:column>
+					<p:column headerText="Objet">
+						<h:outputText
+							value="#{claim.category.montherCategory.title} , #{claim.category.title}" />
+					</p:column>
+
+					<p:column headerText="Ajouté le">
+						<h:outputText value="#{claim.addedDate}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Déposée par">
+						<h:outputText
+							value="#{claim.citizen.firstname} #{claim.citizen.lastname}" />
+					</p:column>
+
+					<p:column headerText="Etat">
+						<h:outputText value="#{claim.status.status}" />
+					</p:column>
+
+					<f:facet name="footer">Il y'a en total #{contributerBean.claims.size()} réclamations</f:facet>
+
+
+
+				</p:dataTable>
+
+				<p:dialog id="dialog" header="Detail de la réclamation"
+					widgetVar="claimDialog" resizable="false" showEffect="fade"
+					hideEffect="explode">
+
+					<h:panelGrid id="display">
+
+						<f:facet name="header">
+							<h:outputText
+								value="Réclamation #{contributerBean.selected.reference}" />
+								
+						</f:facet>
+
+						<table class="table table-striped">
+							<tbody>
+
+								<tr>
+									<th>Objet de la réclamation</th>
+									<td>#{contributerBean.selected.category.montherCategory.title}
+										, #{contributerBean.selected.category.title}</td>
+
+								</tr>
+								<tr>
+									<th>Sujet</th>
+									<td>#{contributerBean.selected.comment}</td>
+
+								</tr>
+								<tr>
+									<th>Etat de la réclamation</th>
+									<td style="text-align: center; background-color: #BBD2E1"><strong>#{contributerBean.selected.status.status}</strong><br />
+										#{contributerBean.selected.status.comment}</td>
+
+								</tr>
+								<tr>
+									<th>Déposée le:</th>
+									<td>#{contributerBean.selected.addedDate}</td>
+
+								</tr>
+
+								<tr>
+									<th>Adresse de localisation</th>
+									<td>#{contributerBean.selected.location.address}</td>
+								</tr>
+								<tr>
+									<th></th>
+									<td><p:gmap
+											center="#{contributerBean.selected.location.latln}" zoom="15"
+											type="HYBRID" model="#{contributerBean.advancedModel}"
+											style="width:250px;height:150px" />
+
+									</td>
+
+								</tr>
+							</tbody>
+						</table>
+						<f:facet name="footer">
+							<center>
+								<p:commandButton id="update" value="Modifier"
+									update=":update_claim:updateClaimPanel :formDatatableClaim:messages1"
+									icon="ui-icon-check"
+									oncomplete="claimDialog.hide(),updateDialog.show()">
+									<f:setPropertyActionListener
+										value="#{contributerBean.selected}"
+										target="#{contributerBean.selectedClaim}" />
+								</p:commandButton>
+							</center>
+						</f:facet>
+					</h:panelGrid>
+				</p:dialog>
+			</h:form>
+
+
+
+
+
+
+
+
+			<h:form id="update_claim" style="z-index:10000000000000;">
+				<p:growl id="message3" showDetail="true" sticky="false" />
+				
+				<p:dialog id="dialog" header="Mise à jour de la réclamation" widgetVar="updateDialog"
+					resizable="false" showEffect="expode" hideEffect="fade" 
+					>
+
+
+
+						<p:panelGrid columns="2" id="updateClaimPanel">
+
+							<f:facet name="header"> Réclamation #{contributerBean.selected.reference} </f:facet>
+							
+							<h:outputText value="Statut: " />
+							<p:selectOneButton
+								value="#{contributerBean.selectedClaim.status.status}">
+								<f:selectItem itemLabel="APRROVED" itemValue="APRROVED" />
+								<f:selectItem itemLabel="IN_PROGRESS" itemValue="IN_PROGRESS" />
+								<f:selectItem itemLabel="TREATED" itemValue="TREATED" />
+							</p:selectOneButton>
+						
+							<h:outputLabel for="Uemail" value="Commentaire: " /> 
+							<p:inputTextarea id="Uemail" styleClass="wydeinputText"
+								value="#{contributerBean.selectedClaim.status.comment}"
+								label="Commentaire" maxlength="40"
+								validatorMessage="Veuillez introduire un commentaire valide!">
+								<f:validateLength minimum="2" maximum="40" />
+
+							</p:inputTextarea>
+							<p:message id="txt_uemail_msg" for="Uemail" display="icon" />
+							
+							<f:facet name="footer">
+								<center>
+									<p:commandButton id="modifier" value="Modifier"
+										update=":update_claim:updateClaimPanel :formDatatableClaim:datatableClaim :update_claim:message3"
+										icon="ui-icon-check"
+										actionListener="#{contributerBean.update}"
+										action="#{contributerBean.updateClaim}"
+										oncomplete="handleUpdateClaim(xhr, status, args)">
+										<f:setPropertyActionListener
+											value="#{contributerBean.selectedClaim}"
+											target="#{contributerBean.selectedClaim}" />
+									</p:commandButton>
+									<p:spacer width="100" height="10" />
+									<p:commandButton id="annuler" value="Annuler"
+										update=":update_claim:updateClaimPanel" icon="ui-icon-check"
+										action="#{contributerBean.clear}"
+										oncomplete="updateDialog.hide()" />
+								</center>
+							</f:facet>
+						</p:panelGrid>
+				</p:dialog>
+
+			</h:form>
+			<script>
+		function handleUpdateClaim(xhr, status, args) {
+			if (args.validationFailed) {
+				jQuery('#updateDialog').effect("shake", {
+					times : 3
+				}, 100);
+			} else {
+				updateDialog.hide();
+
+			}
+		}
+	</script>
+		</ui:define>
+	</ui:composition>

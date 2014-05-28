@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:define name="pageTitle">Suivi des réclamations</ui:define>
+
+		<ui:define name="content">
+			<h2>
+				<p class="text-center">Suivi des réclamations</p>
+			</h2>
+			<div class="row-fluid">
+				<div class="jumbotron">
+
+					<div class="span4 offset4 well">
+						<h:form id="status_form">
+						<p:growl id="growl" showDetail="true" sticky="true" /> 
+							<div class="pull-center">
+
+								<div>
+									<div class="input-append">
+										<label><h5>
+												Tapez la référence de votre réclamation
+											</h5></label>
+									</div>
+									<div class="input-append">
+										<p:inputText id="ref" value="#{statusBean.ref}"
+											placeholder="Référence réclamation" styleClass="span12" />
+									</div>
+
+									<br />
+									<br />
+								</div>
+								<h:commandButton action="#{statusBean.getComplaintStatus}" id="ref_submit"
+								value="Valider" styleClass="btn btn-inverse" update="growl"
+								/>
+								
+							</div>
+						</h:form>
+					</div>
+				</div>
+
+
+			</div>
+
+
+
+
+		</ui:define>
+
+
+	</ui:composition>

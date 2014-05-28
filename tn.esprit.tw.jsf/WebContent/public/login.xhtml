@@ -1,0 +1,144 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:define name="pageTitle">Login page</ui:define>
+	<ui:define name="header">
+		<span id="lang" class="dispor"> <h:form>
+				<h:panelGrid columns="3">
+					<h:commandLink title="FR" action="#{language.setLanguage('fr')}"
+						update="@all">
+						<h:graphicImage library="img" name="france.png" width="20"
+							height="20" /> |
+					</h:commandLink>
+					<h:commandLink title="EN" action="#{language.setLanguage('en')}"
+						update="@all">
+						<h:graphicImage library="img" name="anglais.png" width="20"
+							height="20" /> |
+					</h:commandLink>
+					<h:commandLink title="AR" action="#{language.setLanguage('ar')}"
+						update="@all">
+						<h:graphicImage library="img" name="arab.png" width="20"
+							height="20" />
+					</h:commandLink>
+				</h:panelGrid>
+			</h:form>
+		</span>
+	</ui:define>
+	<ui:define name="content">
+
+		<div class="row-fluid">
+			<div class="jumbotron">
+				<h:graphicImage library="img" name="LogoTW.png" width="150"
+					height="150" />
+				<h2>Tunisian Watch</h2>
+			</div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="span4 offset4 well">
+				<legend>#{msg.loginWelcome}</legend>
+
+				<h:form id="login_form">
+					<div>
+						<p:inputText id="name" value="#{authBean.email}"
+							placeholder="#{msg.loginUserName}" styleClass="span12" />
+						<br />
+						<p:password id="password" value="#{authBean.password}"
+							placeholder="#{msg.loginPassword}" styleClass="span12" />
+						<input type="hidden" name="hidden1" value="this is hidden1" />
+						<h:inputHidden id="hiddenLoc" value="#{authBean.location}" />
+
+						<h:commandButton action="#{authBean.login}" id="login_submit"
+							value="#{msg.login}" styleClass="btn btn-inverse btn-block"
+							onclick="setHiddenValue();" />
+
+
+
+					</div>
+
+				</h:form>
+
+				<h:form id="form">
+
+					<h:outputLink id="loginLink" value="javascript:void(0)"
+						onclick="PF('dlg').show()" title="S'inscrire">
+						<h:outputLabel value="Inscrivez-vous !"></h:outputLabel>
+					</h:outputLink>
+					<p:growl id="growl" showDetail="true" life="3000" />
+
+					<p:dialog id="dialog" header="Inscription" widgetVar="dlg" showEffect="explode"
+						resizable="false">
+
+						<h:panelGrid columns="2" cellpadding="5">
+							<h:outputLabel for="name" value="Nom:" />
+							<p:inputText value="#{registerBean.citizen.firstname}"
+								id="username" required="true" label="username" >
+							<f:validateLength minimum="3" />  
+							</p:inputText>
+
+							<h:outputLabel for="lastname" value="Prénom:" />
+							<p:inputText value="#{registerBean.citizen.lastname}"
+								id="lastname" required="true" label="lastname" >
+								<f:validateLength minimum="3" />  
+							</p:inputText>
+
+							<h:outputLabel for="cin" value="CIN:" />
+							<p:inputMask value="#{registerBean.citizen.cin}" id="cin"
+								required="true" label="cin" mask="99999999"/>
+
+							<h:outputLabel for="mail" value="Email:" />
+							<p:inputText value="#{registerBean.citizen.mail}" id="mail"
+								required="true" label="mail" />
+
+							<h:outputLabel for="telephone" value="Téléphone:" />
+							<p:inputMask value="#{registerBean.citizen.telephone}"
+								id="telephone" required="true" label="telephone" mask="99999999"/>
+
+							<h:outputLabel for="address" value="Adresse:" />
+							<p:inputText value="#{registerBean.citizen.address}" id="address"
+								required="true" label="address" />
+
+							<h:outputLabel for="pwd1" value="Choisir un mot de passe: *" />
+							<p:password id="pwd1" value="#{registerBean.citizen.password}"
+								match="pwd2" label="Password 1" required="true" />
+
+							<h:outputLabel for="pwd2" value="Retapez le mot de passe: *" />
+							<p:password id="pwd2" value="#{registerBean.citizen.password}"
+								label="Password 2" required="true" />
+
+								<p:commandButton value="Reset" type="reset" />
+								<p:commandButton id="loginButton" value="S'inscrire" update="growl"
+									actionListener="#{registerBean.saveUser}"
+									oncomplete="handleLoginRequest(xhr, status, args)" />
+								
+
+							
+						</h:panelGrid>
+
+					</p:dialog>
+				</h:form>
+
+
+
+			</div>
+
+
+		</div>
+		<h:outputScript library="js/pages/" name="login.js" />
+		<script type="text/javascript">  
+    function handleLoginRequest(xhr, status, args) {  
+        if(args.validationFailed) {  
+            PF('dlg').jq.effect("shake", { times:5 }, 100);  
+        }   
+        else {  
+            PF('dlg').hide();  
+            $('#loginLink').fadeOut();  
+        }  
+    }  
+</script>
+	</ui:define>
+</ui:composition>

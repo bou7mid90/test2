@@ -1,0 +1,356 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:define name="pageTitle">Gestion des utilisateurs</ui:define>
+
+
+		<ui:define name="content">
+			<p:tabView id="userOption" effect="clip" effectDuration="normal">
+
+				<p:tab title="Liste des utilisateurs">
+
+					<h:form prependId="false" id="formDatatableUser">
+						<p:growl id="messages1" showDetail="true" sticky="false" />
+						<p:poll interval="5" listener="#{userBean.loadUsers}"
+							update="datatableUser" />
+
+						<p:dataTable id="datatableUser" var="user"
+							value="#{userBean.users}" widgetVar="tableUser"
+							rowKey="#{user.id}" paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+							paginatorAlwaysVisible="false" selection="#{userBean.selected}"
+							selectionMode="single">
+
+							<p:ajax event="rowSelect"
+								update=":userOption:formDatatableUser:datatableUser :userOption:formDatatableUser:messages1 :userOption:formDatatableUser:display"
+								oncomplete="userDialog.show()" />
+
+
+							<f:facet name="header">Utilisateurs</f:facet>
+
+							<p:column headerText="Nom">
+								<h:outputText value="#{user.firstname}" />
+							</p:column>
+
+							<p:column headerText="Prenom">
+								<h:outputText value="#{user.lastname}" />
+							</p:column>
+
+							<p:column headerText="Email">
+								<h:outputText value="#{user.mail}" />
+							</p:column>
+
+							<p:column headerText="Addresse">
+								<h:outputText value="#{user.address}" />
+							</p:column>
+
+							<p:column headerText="Telephone">
+								<h:outputText value="#{user.telephone}" />
+							</p:column>
+
+							<p:column headerText="Role">
+								<h:outputText value="#{user.role}" />
+							</p:column>
+
+
+							<f:facet name="footer">Il y'a en total #{userBean.users.size()} utilisateurs</f:facet>
+
+
+
+
+						</p:dataTable>
+
+						<p:dialog id="dialog" header="Detail de l'utilisateur"
+							widgetVar="userDialog" resizable="false" showEffect="fade"
+							hideEffect="explode">
+
+							<h:panelGrid id="display" columns="2" cellpadding="4">
+
+								<f:facet name="header">
+									<h:outputText value="#{userBean.selected.firstname}" />&nbsp;
+									<h:outputText value="#{userBean.selected.lastname}" />
+								</f:facet>
+
+								<h:outputText value="Telephone:" />
+								<h:outputText value="#{userBean.selected.telephone}" />
+
+								<h:outputText value="Email:" />
+								<h:outputText value="#{userBean.selected.mail}" />
+
+								<h:outputText value="Addresse:" />
+								<h:outputText value="#{userBean.selected.address}" />
+
+								<h:outputText value="Role:" />
+								<h:outputText value="#{userBean.selected.role}" />
+
+								<p:commandButton id="supprimer" value="Supprimer"
+									update=":userOption:formDatatableUser:datatableUser :userOption:formDatatableUser:messages1"
+									icon="ui-icon-check" action="#{userBean.deleteUser}"
+									actionListener="#{userBean.delete}"
+									oncomplete="userDialog.hide()">
+									<f:setPropertyActionListener value="#{userBean.selected}"
+										target="#{userBean.selectedUser}" />
+								</p:commandButton>
+								<p:commandButton id="update" value="Modifier"
+									update=":update_user:updateUserPanel :userOption:formDatatableUser:messages1"
+									icon="ui-icon-check"
+									oncomplete="userDialog.hide(),updateDialog.show()">
+									<f:setPropertyActionListener value="#{userBean.selected}"
+										target="#{userBean.selectedUser}" />
+								</p:commandButton>
+
+
+							</h:panelGrid>
+						</p:dialog>
+					</h:form>
+
+
+				</p:tab>
+
+				<p:tab title="Ajouter Utilisateur">
+
+					<h:form id="add_user">
+						<p:growl id="messages2" showDetail="true" sticky="false" />
+						<p:outputPanel id="addUserPanel"
+							style="text-align:left;width:100%;margin-left:auto;margin-right:auto;">
+							<p:panelGrid columns="3"
+								style="border:none;width:80%;margin-left:auto;margin-right:auto;">
+								<f:facet name="header">  Ajouter Utilisateur  </f:facet>
+
+
+								<h:outputLabel for="nom" value="Nom: *" />
+								<p:inputText id="nom" styleClass="wydeinputText"
+									value="#{userBean.selectedUser.firstname}" label="Nom"
+									maxlength="20" required="true"
+									requiredMessage="Champ obligatoire!"
+									validatorMessage="Format du nom invalide">
+									<f:validateLength minimum="2" maximum="20" />
+									<f:validateRegex pattern="[a-zA-Z][a-zA-Z\. ]*[a-zA-Z]" />
+
+								</p:inputText>
+								<p:message id="txt_nom_msg" for="nom" display="icon" />
+
+
+								<h:outputLabel for="prenom" value="Prénom: *" />
+								<p:inputText id="prenom" styleClass="wydeinputText"
+									value="#{userBean.selectedUser.lastname}" label="Prénom"
+									maxlength="20" required="true"
+									requiredMessage="Champ obligatoire!"
+									validatorMessage="Format du prénom invalide">
+									<f:validateLength minimum="2" maximum="20" />
+									<f:validateRegex pattern="[a-zA-Z][a-zA-Z\. ]*[a-zA-Z]" />
+
+								</p:inputText>
+								<p:message id="txt_prenom_msg" for="prenom" display="icon" />
+
+
+								<h:outputLabel for="addresse" value="Addresse : *" />
+								<p:inputText id="addresse" styleClass="wydeinputText"
+									value="#{userBean.selectedUser.address}" label="Addresse"
+									maxlength="20" required="true"
+									requiredMessage="Champ obligatoire!">
+									<f:validateLength minimum="2" maximum="20" />
+									<f:validateRegex pattern="[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+
+								</p:inputText>
+								<p:message id="txt_grade_msg" for="addresse" display="icon" />
+
+								<h:outputLabel for="telephone" value="Telephone: *" />
+								<p:inputMask id="telephone" styleClass="wydeinputText"
+									value="#{userBean.selectedUser.telephone}" label="Telephone"
+									maxlength="9" required="true"
+									requiredMessage="Champ obligatoire!" mask="99999999">
+									<f:validateLength minimum="8" maximum="8" />
+
+								</p:inputMask>
+								<p:message id="txt_telephone_msg" for="telephone" display="icon" />
+
+
+
+								<h:outputLabel for="email" value="Email: *" />
+								<p:inputText id="email" styleClass="wydeinputText"
+									value="#{userBean.selectedUser.mail}" label="Email"
+									maxlength="40" required="true"
+									requiredMessage="Champ obligatoire!"
+									validatorMessage="Veuillez introduire une adresse mail valide!">
+									<f:validateLength minimum="2" maximum="40" />
+									<f:validateRegex
+										pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+
+								</p:inputText>
+								<p:message id="txt_email_msg" for="email" display="icon" />
+
+								<h:outputLabel for="password" value="Password: *" />
+								<p:inputText id="password" styleClass="wydeinputText"
+									value="#{userBean.selectedUser.password}" label="Password"
+									maxlength="20" required="true"
+									requiredMessage="Champ obligatoire!"
+									validatorMessage="Format du password invalide">
+									<f:validateLength minimum="2" maximum="20" />
+								
+
+								</p:inputText>
+								<p:message id="txt_password_msg" for="password" display="icon" />
+
+								<h:outputText for="role" value="Role: " />
+								<p:selectOneButton id="role" value="#{userBean.selectedUser.role}">
+									<f:selectItem itemLabel="ADMIN" itemValue="ADMIN" />
+									<f:selectItem itemLabel="Citoyen" itemValue="CITIZEN" />
+									<f:selectItem itemLabel="Contributeur" itemValue="CONTRIBUTOR" />
+								</p:selectOneButton>
+								<p:message id="txt_role_msg" for="role" display="icon" />
+
+								<f:facet name="footer">
+									<center>
+										<p:commandButton id="ajouter" value="Enregistrer"
+											update=":userOption:add_user:addUserPanel :userOption:add_user:messages2"
+											icon="ui-icon-check" actionListener="#{userBean.save}"
+											action="#{userBean.saveUser}">
+											<f:setPropertyActionListener value="#{userBean.selectedUser}"
+												target="#{userBean.selectedUser}" />
+										</p:commandButton>
+										<p:spacer width="100" height="10" />
+										<p:commandButton id="reset" value="Reset"
+											update=":userOption:add_user:addUserPanel" process="@this"
+											icon="ui-icon-check" action="#{userBean.clear}" />
+									</center>
+								</f:facet>
+							</p:panelGrid>
+						</p:outputPanel>
+					</h:form>
+				</p:tab>
+			</p:tabView>
+
+
+
+			<h:form id="update_user" style="z-index:10000000000000;">
+			<p:growl id="message3" showDetail="true" sticky="false" />
+				<p:dialog id="dialog" header="" widgetVar="updateDialog"
+					resizable="false" showEffect="expode" hideEffect="fade" width="55%"
+					closable="false" modal="true">
+
+
+
+					<p:outputPanel id="updateUserPanel"
+						style="text-align:left;width:100%;margin-left:auto;margin-right:auto;">
+						<p:panelGrid columns="3"
+							style="border:none;width:80%;margin-left:auto;margin-right:auto;">
+
+							<f:facet name="header"> Modifier Utilisateur </f:facet>
+
+
+							<h:outputLabel for="Utelephone" value="Telephone: *" />
+							<p:inputMask id="Utelephone" styleClass="wydeinputText"
+								value="#{userBean.selectedUser.telephone}" label="Telephone"
+								maxlength="9" required="true"
+								requiredMessage="Champ obligatoire!" mask="99999999">
+								<f:validateLength minimum="8" maximum="8" />
+
+							</p:inputMask>
+							<p:message id="txt_utelephone_msg" for="Utelephone"
+								display="icon" />
+
+							<h:outputLabel for="Unom" value="Nom: *" />
+							<p:inputText id="Unom" styleClass="wydeinputText"
+								value="#{userBean.selectedUser.firstname}" label="Nom"
+								maxlength="20" required="true"
+								requiredMessage="Champ obligatoire!"
+								validatorMessage="Format du nom invalide">
+								<f:validateLength minimum="2" maximum="20" />
+								<f:validateRegex pattern="[a-zA-Z][a-zA-Z\. ]*[a-zA-Z]" />
+
+							</p:inputText>
+							<p:message id="txt_unom_msg" for="Unom" display="icon" />
+
+
+							<h:outputLabel for="Uprenom" value="Prénom: *" />
+							<p:inputText id="Uprenom" styleClass="wydeinputText"
+								value="#{userBean.selectedUser.lastname}" label="Prénom"
+								maxlength="20" required="true"
+								requiredMessage="Champ obligatoire!"
+								validatorMessage="Format du prénom invalide">
+								<f:validateLength minimum="2" maximum="20" />
+								<f:validateRegex pattern="[a-zA-Z][a-zA-Z\. ]*[a-zA-Z]" />
+
+							</p:inputText>
+							<p:message id="txt_uprenom_msg" for="Uprenom" display="icon" />
+
+
+							<h:outputLabel for="Uaddresse" value="Addresse: *" />
+							<p:inputText id="Uaddresse" styleClass="wydeinputText"
+								value="#{userBean.selectedUser.address}" label="Grade"
+								maxlength="20" required="true"
+								requiredMessage="Champ obligatoire!">
+								<f:validateLength minimum="2" maximum="20" />
+
+
+							</p:inputText>
+							<p:message id="txt_uaddresse_msg" for="Uaddresse" display="icon" />
+
+
+
+
+
+
+							<h:outputLabel for="Uemail" value="Email: *" />
+							<p:inputText id="Uemail" styleClass="wydeinputText"
+								value="#{userBean.selectedUser.mail}" label="Email"
+								maxlength="40" required="true"
+								requiredMessage="Champ obligatoire!"
+								validatorMessage="Veuillez introduire une adresse mail valide!">
+								<f:validateLength minimum="2" maximum="40" />
+								<f:validateRegex
+									pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+
+							</p:inputText>
+							<p:message id="txt_uemail_msg" for="Uemail" display="icon" />
+
+							<h:outputText value="Role: " />
+							<p:selectOneButton value="#{userBean.selectedUser.role}">
+								<f:selectItem itemLabel="ADMIN" itemValue="ADMIN" />
+								<f:selectItem itemLabel="Citoyen" itemValue="CITIZEN" />
+							    <f:selectItem itemLabel="Contributeur" itemValue="CONTRIBUTOR" />
+							</p:selectOneButton>
+
+
+
+							<f:facet name="footer">
+								<center>
+									<p:commandButton id="modifier" value="Modifier"
+										update=":update_user:updateUserPanel :userOption:formDatatableUser:datatableUser :update_user:message3"
+										icon="ui-icon-check" actionListener="#{userBean.update}"
+										action="#{userBean.updateUser}"
+										oncomplete="handleUpdateUser(xhr, status, args)">
+										<f:setPropertyActionListener value="#{userBean.selectedUser}"
+											target="#{userBean.selectedUser}" />
+									</p:commandButton>
+									<p:spacer width="100" height="10" />
+									<p:commandButton id="annuler" value="Annuler"
+										update=":update_user:updateUserPanel" icon="ui-icon-check"
+										action="#{userBean.clear}" oncomplete="updateDialog.hide()" />
+								</center>
+							</f:facet>
+						</p:panelGrid>
+					</p:outputPanel>
+				</p:dialog>
+
+			</h:form>
+			<script>
+		function handleUpdateUser(xhr, status, args) {
+			if (args.validationFailed) {
+				jQuery('#updateDialog').effect("shake", {
+					times : 3
+				}, 100);
+			} else {
+				updateDialog.hide();
+
+			}
+		}
+	</script>
+		</ui:define>
+	</ui:composition>

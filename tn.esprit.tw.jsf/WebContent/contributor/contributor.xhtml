@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:define name="pageTitle">Les réclamations en cours</ui:define>
+
+		<ui:define name="content">
+
+			<div class="row-fluid">
+
+				<h2>
+				<p class="text-center">Les réclamations en cours</p>
+				</h2><br ></br> 
+				<p class="text-center">	
+						<h:form>
+
+							<p:gmap center="36.8412343,10.1543704" zoom="11" type="HYBRID"
+								model="#{contributerBean.advancedModel}"
+								style="width:auto;height:500px">
+
+								<p:ajax event="overlaySelect"
+									listener="#{contributerBean.onMarkerSelect}" />
+
+								<p:gmapInfoWindow>
+									<p:outputPanel
+										style="text-align:center;display:block;margin:auto:">
+
+										<h:outputText value="#{contributerBean.marker.title}" />
+										<br />
+										<h:outputText value="#{contributerBean.marker.data}" />
+
+
+
+
+									</p:outputPanel>
+
+								</p:gmapInfoWindow>
+							</p:gmap>
+
+						</h:form>
+					</p>
+				</div>
+			
+		</ui:define>
+
+
+	</ui:composition>

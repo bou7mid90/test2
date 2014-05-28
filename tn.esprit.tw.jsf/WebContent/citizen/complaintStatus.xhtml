@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:define name="pageTitle">Suivi des réclamations</ui:define>
+
+		<ui:define name="content">
+			<div class="row-fluid">
+				<h2>
+				<p class="text-center">Suivi des réclamations</p>
+				</h2>
+				
+	
+				<br />
+				<div class="span6 offset3 well">
+					<legend>Détails de la réclamation <strong>#{statusBean.complaint.reference}</strong></legend>
+
+					<table class="table table-striped">
+						<tbody>
+							
+							<tr>
+								<th>Objet de la réclamation</th>
+								<td>#{statusBean.complaint.category.montherCategory.title} ,
+									#{statusBean.complaint.category.title}</td>
+
+							</tr>
+							<tr>
+								<th>Sujet</th>
+								<td>#{statusBean.complaint.comment}</td>
+
+							</tr>
+							<tr>
+								<th>Etat de la réclamation</th>
+								<td style="text-align:center;background-color:#BBD2E1"><strong>#{statusBean.complaint.status.status}</strong><br />
+								#{statusBean.complaint.status.comment}
+								</td>
+
+							</tr>
+							<tr>
+								<th>Ajouté le:</th>
+								<td> 
+								<strong> 
+								<h:outputText value="#{statusBean.complaint.addedDate}" >
+              					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText> </strong>
+								 </td>
+
+							</tr>
+							
+							<tr>
+								<th>Adresse de localisation</th>
+								<td>#{complaintBean.mapBean.address} <p:gmap
+										center="#{mapBean.geo}" zoom="15" type="HYBRID"
+										model="#{mapBean.draggableModel}"
+										style="width:250px;height:150px" />
+
+								</td>
+
+							</tr>
+							<tr>
+								<th>Documents téléchargés</th>
+								<td><p:dataList value="#{complaintBean.uploadedFiles}"
+										var="doc" itemType="circle">  
+   										 #{doc.fileName}, #{doc.contentType}   
+										</p:dataList></td>
+
+							</tr>
+							
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+
+
+
+		</ui:define>
+
+
+	</ui:composition>

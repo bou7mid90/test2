@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" dir="rtl"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<title>Welcome page</title>
+
+</h:head>
+<h:body>
+
+	<ui:composition template="/template/layout.xhtml">
+
+		<ui:define name="content">
+			<div class="row-fluid">
+				
+		
+	<div class="panel panel-success">
+  <div class="panel-heading">
+    <h3 class="panel-title">Réclamation enregistrée</h3>
+  </div>
+  <div class="panel-body">
+    <div class="alert alert-success">
+	<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<p>Votre Réclamation est enregistré avec succcès, et elle sera examinée
+				par une authorité qualifiée. </p>
+				<p>Un SMS et un email de confirmation vous seraient envoyés pour suivre le traitement de votre demande.</p>
+				
+	</div>
+  </div>
+</div>		
+	
+	<br /><br />
+				<div class="span6 offset3 well">
+					<legend>Détail de la réclamation </legend>
+
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<th>Référence: </th>
+								<td>#{complaintBean.lastComplaint.reference}</td>
+
+							</tr>
+							<tr>
+								<th>Objet de la réclamation</th>
+								<td>#{complaintBean.lastComplaint.category.montherCategory.title} , #{complaintBean.lastComplaint.category.title}</td>
+
+							</tr>
+							<tr>
+								<th>Sujet</th>
+								<td>#{complaintBean.lastComplaint.comment}</td>
+
+							</tr>
+							<tr>
+								<th>Ajouté le</th>
+								<td>
+								<strong> 
+								<h:outputText value="#{complaintBean.lastComplaint.addedDate}" >
+              					<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText> </strong>
+								</td>
+
+							</tr>
+							<tr>
+								<th>Adresse de localisation</th>
+								<td>#{complaintBean.mapBean.address}
+								<p:gmap center="#{mapBean.geo}" zoom="15" type="HYBRID"
+								model="#{mapBean.draggableModel}"   
+        						style="width:250px;height:150px" />  
+								
+								</td>
+
+							</tr>
+							<tr>
+								<th>Documents téléchargés</th>
+								<td>
+								<p:dataList value="#{complaintBean.uploadedFiles}" var="doc" itemType="circle">  
+   										 #{doc.fileName}, #{doc.contentType}   
+										</p:dataList>  
+								
+								</td>
+
+							</tr>
+							<tr>
+								<th>Etat de la réclamation</th>
+								<td>#{complaintBean.lastComplaint.status.status}
+								</td>
+
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+
+
+
+		</ui:define>
+
+
+	</ui:composition>
+
+</h:body>
+</html>

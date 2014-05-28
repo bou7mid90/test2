@@ -1,0 +1,39 @@
+
+div.dataTables_length {
+	width: 200px;
+    font-family:arial, helvetica; font-size:12px; font-weight:bold;
+    
+}
+
+div.dataTables_length select {
+	width: 65px;
+}
+
+div.dataTables_filter {
+	float: right;
+	text-align: right;
+	font-family:arial, helvetica; font-size:12px; font-weight:bold;
+	
+}
+
+div.dataTables_info {
+	padding-top: 8px;
+	font-family:arial, helvetica; font-size:12px; font-weight:bold;
+	
+}
+
+div.dataTables_paginate {
+	float: right;
+	margin: 0;
+	font-family:arial, helvetica; font-size:12px; font-weight:bold;
+	
+}
+
+table {
+	margin: 1em 0;
+	clear: both;
+}
+
+table.dataTable th:active {
+	outline: none;
+}

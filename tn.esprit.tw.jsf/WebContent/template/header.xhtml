@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<body>
+	<ui:composition>
+
+		<span id="lang" class="dispor"> <h:form>
+				<h:panelGrid columns="3">
+					<h:commandLink title="FR" action="#{language.setLanguage('fr')}"
+						update="@all">
+						<h:graphicImage library="img" name="france.png" width="20"
+							height="20" /> |
+					</h:commandLink>
+					<h:commandLink title="EN" action="#{language.setLanguage('en')}"
+						update="@all">
+						<h:graphicImage library="img" name="anglais.png" width="20"
+							height="20" /> |
+					</h:commandLink>
+					<h:commandLink title="AR" action="#{language.setLanguage('ar')}"
+						update="@all">
+						<h:graphicImage library="img" name="arab.png" width="20"
+							height="20" />
+					</h:commandLink>
+				</h:panelGrid>
+			</h:form>
+		</span>
+		<div class="masthead">
+			<h3 class="muted">
+				<img src="/TunisianWatch/resources/img/LogoTW.png" width="100" height="100" />
+				#{msg.welcome} Tunisian Watch
+			</h3>
+			
+				<h:form>
+
+					<p:growl id="messages" />
+
+
+					<p:menubar>
+						<p:menuitem value="&nbsp;#{msg.home}" icon="ui-icon-home" url="#" rendered="#{authBean.citizen}"/>
+						<p:menuitem value="&nbsp;#{msg.home}" icon="ui-icon-home" url="#" rendered="#{authBean.admin}"/>
+						<p:menuitem value="&nbsp;#{msg.home}" icon="ui-icon-home" url="/contributor/contributor.xhtml" rendered="#{authBean.contributor}" />
+						
+						<p:menuitem value="&nbsp;#{msg.profil}" icon="ui-icon-person" url="/citizen/citizen.xhtml" rendered="#{authBean.citizen}" />
+						<p:menuitem value="&nbsp;#{msg.claim}" icon="ui-icon-pencil"
+							url="/contributor/claims.xhtml" rendered="#{authBean.contributor}"/>
+
+
+						<p:menuitem value="&nbsp;#{msg.claim}" icon="ui-icon-pencil"
+							url="/citizen/complaint.xhtml" rendered="#{authBean.citizen}"/>
+
+						<p:menuitem value="&nbsp;#{msg.status}" icon="ui-icon-info" url="/citizen/status.xhtml" rendered="#{authBean.citizen}"/>
+
+						<p:submenu label="&nbsp;#{msg.manage}" icon="ui-icon-circle-check"
+							rendered="#{authBean.admin}">
+							<p:menuitem value="#{msg.claim}" url="#" />
+							<p:submenu label="#{msg.search}" icon="ui-icon-search">
+								<p:submenu label="Text">
+									<p:menuitem value="Workspace" url="#" />
+								</p:submenu>
+								<p:menuitem value="File" url="#" />
+							</p:submenu>
+						</p:submenu>
+
+						<p:submenu label="#{msg.help}" icon="ui-icon-help">
+							<p:menuitem value="#{msg.search}" icon="ui-icon-search" url="#" />
+							
+						</p:submenu>
+
+						<f:facet name="options">
+							<h:form>
+								<p:commandButton
+									value="#{msg.logout} (#{authBean.user.firstname}&nbsp;#{authBean.user.lastname})"
+									action="#{authBean.logout()}" icon="ui-icon-extlink" />
+
+							</h:form>
+
+						</f:facet>
+					</p:menubar>
+
+
+				</h:form>
+			</div>
+
+	</ui:composition>
+</body>
+</html>
+
+

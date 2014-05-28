@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/layout.xhtml">
+
+	<ui:define name="pageTitle">Login page</ui:define>
+	<ui:define name="header">
+		<span id="lang" class="dispor"> <h:form>
+				<h:panelGrid columns="3">
+					<h:commandLink title="FR" action="#{language.setLanguage('fr')}"
+						update="@all">
+						<h:graphicImage library="img" name="france.png" width="20"
+							height="20" /> |
+					</h:commandLink>
+					<h:commandLink title="EN" action="#{language.setLanguage('en')}"
+						update="@all">
+						<h:graphicImage library="img" name="anglais.png" width="20"
+							height="20" /> |
+					</h:commandLink>
+					<h:commandLink title="AR" action="#{language.setLanguage('ar')}"
+						update="@all">
+						<h:graphicImage library="img" name="arab.png" width="20"
+							height="20" />
+					</h:commandLink>
+				</h:panelGrid>
+			</h:form>
+		</span>
+	</ui:define>
+	<ui:define name="content">
+
+
+		<div class="row-fluid">
+			<div class="jumbotron">
+			<h:graphicImage library="img" name="LogoTW.png" width="150"
+							height="150" />
+				<h2>Tunisian Watch</h2>
+			</div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="span4 offset4 well">
+				<legend>Connectez-vous</legend>
+				<div id="error_login" class="alert alert-error">#{msg.loginErrorMessage}</div>
+				
+					<h:form id="login_form">
+					<div>
+						<p:inputText id="name" value="#{authBean.email}" placeholder="email" styleClass="span12" />
+						<br />
+						<p:password id="password" value="#{authBean.password}" placeholder="passowrd" styleClass="span12" />
+						<h:commandButton action="#{authBean.login}" id="login_submit"
+							value="#{msg.login}" styleClass="btn btn-inverse btn-block" />
+							
+					</div>
+					
+				</h:form>
+			</div>
+		</div>
+
+		<h:outputScript library="js/pages/" name="login.js" />
+	</ui:define>
+</ui:composition>

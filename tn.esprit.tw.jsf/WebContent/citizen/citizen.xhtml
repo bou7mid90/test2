@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:define name="pageTitle">Login page</ui:define>
+
+	
+
+		<ui:define name="content">
+
+			<div class="row-fluid">
+
+
+				<div class="jumbot">
+
+					<div id="content" class="clearfix">
+
+						<section id="left">
+
+						<div id="userStats" class="clearfix">
+
+							<div class="pic">
+								<a href="#myModal"> <img
+									src="/TunisianWatch/resources/img/profil.jpg"
+									title="Update profil" width="85" height="85"
+									alt="Update profil" /></a>
+							</div>
+
+							<div class="data">
+								<h1>#{authBean.user.firstname} #{authBean.user.lastname}</h1>
+								<h3>#{authBean.user.address}</h3>
+								<h4>
+									<a href="#">#{authBean.user.telephone}</a>
+								</h4>
+								<h4>
+									<a href="#">#{authBean.user.mail}</a>
+								</h4>
+								<h4>
+									<img src="/TunisianWatch/resources/img/Skype-icon.png"
+										title="Skype" width="15" height="15" alt="Skype" />
+								</h4>
+								<div class="sep"></div>
+								<ul class="numbers clearfix">
+									<li>Réclamations en attente<strong>2</strong></li>
+									<li>Réclamations traitées<strong>4</strong></li>
+
+								</ul>
+								<br />
+								<div class="data">
+									<br /> <br /> <a href="#myPassword"> <img
+										src="/TunisianWatch/resources/img/lock-icon.png"
+										title="Changer mot de passe" alt="Changer mot de passe"
+										width="70" height="70" />
+									</a>
+								</div>
+							</div>
+							</div>
+						</section>
+
+					</div>
+
+
+				</div>
+			</div>
+			
+
+		</ui:define>
+
+
+	</ui:composition>

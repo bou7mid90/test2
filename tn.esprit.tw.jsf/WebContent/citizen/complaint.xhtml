@@ -1,0 +1,223 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ps="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template/layout.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:define name="pageTitle">#{msg.newClaim}</ui:define>
+
+
+		<ui:define name="content">
+
+			<h2>
+				<p class="text-center">#{msg.newClaim}</p>
+			</h2>
+			<br></br>
+
+			<h:form>
+
+				<p:growl id="growl" sticky="true" showDetail="true" />
+
+				<p:wizard flowListener="#{complaintBean.onFlowProcess}">
+
+					<p:tab id="category" title="#{msg.step} 1">
+
+						<p:panel header="#{msg.subClaim}">
+							<h:messages errorClass="error" />
+
+							<h4>
+								#{msg.getHelp}
+								<p:spacer width="20" height="20" />
+								<p:selectOneMenu value="#{complaintBean.selectedCategory}">
+									<f:selectItems value="#{complaintBean.categories}" var="cat"
+										itemValue="#{cat.id_category}" itemLabel="#{cat.title}" />
+								</p:selectOneMenu>
+
+							</h4>
+
+
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="subcategory" title="#{msg.step} 2">
+						<p:panel header="#{msg.subClaim}">
+
+
+
+
+							<h4>
+								#{msg.exact} :
+								<p:spacer width="20" height="20" />
+								<p:selectOneMenu value="#{complaintBean.selectedSubcategory}">
+									<f:selectItems value="#{complaintBean.subcategories}" var="cat"
+										itemValue="#{cat.id_category}" itemLabel="#{cat.title}" />
+								</p:selectOneMenu>
+							</h4>
+
+
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="map" title="#{msg.step} 3">
+						<p:panel header="#{msg.location}">
+
+							<h4>
+								#{msg.locate} :
+								<p:inputText id="surname" value="#{mapBean.address}">
+									<p:ajax event="blur" listener="#{mapBean.updateMapCenter()}"
+										update="pmap" />
+								</p:inputText>
+							</h4>
+							<p:separator />
+
+							<h:panelGroup id="pmap">
+								<p:gmap widgetVar="w_gmap" center="#{mapBean.geo}" zoom="15"
+									type="HYBRID" model="#{mapBean.draggableModel}"
+									style="width:600px;height:400px">
+									<p:ajax event="markerDrag" listener="#{mapBean.onMarkerDrag}"
+										update="growl" />
+								</p:gmap>
+							</h:panelGroup>
+
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="files" title="#{msg.step} 4">
+						<p:panel header="#{msg.filesPhotos}"
+							style="min-width:400px;min-height:200px;">
+
+							<h4>#{msg.havingFiles} :</h4>
+							<p:separator id="separator" />
+
+							<p:fileUpload fileUploadListener="#{complaintBean.upload}"
+								style="min-width:400px;min-height:200px;" mode="advanced"
+								dragDropSupport="true" update="growl" sizeLimit="100000"
+								fileLimit="4" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/" />
+
+
+
+
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="comment" title="#{msg.step} 5">
+						<p:panel header="#{msg.tellStory}"
+							style="min-width:400px;min-height:200px;">
+
+							<h4>#{msg.write} :</h4>
+							<p:separator id="separator1" />
+							<p:editor id="editor" value="#{complaintBean.comment}"
+								width="900" />
+
+
+
+
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="infos" title="#{msg.step} 6">
+						<p:panel header="#{msg.addInfo}"
+							style="min-width:400px;min-height:200px;">
+
+							<h4>#{msg.havingInfo} :</h4>
+							<p:separator />
+
+							<p:panelGrid columns="2" cellpadding="5">
+
+
+
+								<h:outputLabel for="rating" value="#{msg.importance}: " />
+								<p:rating id="rating" value="#{complaintBean.rating}" />
+
+								<h:outputLabel for="popupButtonCal"
+									value="#{msg.eventTook} : " />
+								<p:calendar value="#{complaintBean.date}" id="popupButtonCal"
+									showOn="button" />
+							</p:panelGrid>
+
+
+
+
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="confirm" title="#{msg.confirmation}">
+						<p:panel header="#{msg.confirm}">
+
+							<p:accordionPanel>
+								<p:tab title="#{msg.subClaim}">
+									<h:panelGrid>
+										<table class="table table-hover">
+						<tbody>
+							<tr>
+								<th>#{msg.yourClaim}</th>
+								<td>#{complaintBean.montherCategory.title} , #{complaintBean.subCategory.title}</td>
+
+							</tr>
+							<tr>
+								<th>#{msg.yourSubClaim}</th>
+								<td>#{complaintBean.comment}</td>
+
+							</tr>
+							</tbody>
+							</table>
+
+
+									</h:panelGrid>
+								</p:tab>
+								<p:tab title="#{msg.locAndAdd}">
+									<h:panelGrid>
+										<table class="table table-hover">
+						<tbody>
+							<tr>
+								<th>#{msg.address}</th>
+								<td>#{complaintBean.mapBean.address}</td>
+
+							</tr>
+							
+							</tbody>
+							</table>
+									
+										
+
+										<p:commandButton type="button" icon="ui-icon-pin-s"
+											value="#{msg.showMap}" onclick="PF('dlg').show()" />
+
+										<p:dialog widgetVar="dlg" width="625" height="400"
+											modal="true">
+											<p:gmap center="#{mapBean.geo}" zoom="15" type="HYBRID" model="#{mapBean.draggableModel}"
+												style="width:600px;height:400px" />
+										</p:dialog>
+
+									</h:panelGrid>
+								</p:tab>
+								<p:tab title="#{msg.upFiles}">
+									
+								 
+										<p:dataList value="#{complaintBean.uploadedFiles}" var="doc" itemType="circle">  
+   										 #{doc.fileName}, #{doc.contentType}   
+										</p:dataList>  
+
+									
+								</p:tab>
+							</p:accordionPanel>
+
+							<br /><br />
+							<p class="text-center">
+							<h:commandButton value="#{msg.valide}"
+								action="#{complaintBean.save}" styleClass="btn btn-inverse "> 
+								
+								</h:commandButton>
+							</p>
+						</p:panel>
+					</p:tab>
+
+				</p:wizard>
+
+			</h:form>
+
+		</ui:define>
+
+
+	</ui:composition>
